@@ -1,4 +1,3 @@
-print 'Hello'
 import maya.cmds as cmds
 
 cmds.upAxis( ax='y', rv=True )
@@ -11,13 +10,6 @@ def createMenu(*args):
 		if m == 'RDojo_Menu':
 			cmds.deleteUI('RDojo_Menu', m=True)
 
-	dojoMenu = cmds.menu('RDojo_Menu', label='RDMenu', to=True, p='MayaWindow')
-	cmds.menuItem( label='LoadUI', p=dojoMenu, c=loadUI)
-
-def loadUI(*args):
-	import system.dojo_ui as dojoui
-	dojoui = dojoui.RDojo_UI()
-	dojoui.ui()
-
+	cmds.menu('RDojo_Menu', label='RDMenu', to=True, p='MayaWindow')
 
 createMenu()
