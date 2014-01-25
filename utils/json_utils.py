@@ -1,3 +1,5 @@
+import json
+
 def writeJson(fileName, data, *args):
     with open(fileName[0], 'w') as outfile:
         json.dump(data, outfile)

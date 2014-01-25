@@ -2,6 +2,10 @@ import maya.cmds as cmds
 import json
 import tempfile
 
+# Import our json_utils module
+import utils.json_utils as json_utils
+reload(json_utils)
+
 # The UI class
 class RDojo_UI:
 
@@ -50,7 +54,7 @@ class RDojo_UI:
         fileName = cmds.fileDialog2(fileFilter=basicFilter, dialogStyle=2, fm=1, okc='Load')
 
         # Read the Json file
-        data = self.readJson(fileName)
+        data = json_utils.readJson(fileName)
         info = json.loads( data )
 
         # Lets use a loop to build locators
@@ -84,7 +88,7 @@ class RDojo_UI:
         newLctrInfo['positions']=lctrPositions
         # Define a path to save the json file.
   
-        self.writeJson(fileName, newLctrInfo)
+        json_utils.writeJson(fileName, newLctrInfo)
 
     def rigArm(self, *args):
         import rigging.rig_arm as Rig_Arm
