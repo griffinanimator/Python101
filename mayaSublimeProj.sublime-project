@@ -1,0 +1,13 @@
+{
+	"settings":
+	{
+		"python_interpreter_path": "D:/Program Files/Autodesk/Maya2014/bin/mayapy.exe",
+		"python_package_paths":
+		[
+			"D:/Program Files/Autodesk/Maya2014/devkit/other/pymel/extras/completion/py/",
+			"/home/sr/python_packages1",
+			"/home/sr/python_packages2",
+			"/home/sr/python_packages3"
+		]
+	}
+}

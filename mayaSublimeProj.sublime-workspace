@@ -1,0 +1,430 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Fo",
+				"Foot_Bank"
+			],
+			[
+				"grp_",
+				"grp_footPivot"
+			],
+			[
+				"long",
+				"longName"
+			],
+			[
+				"ball",
+				"ballPos	statement"
+			],
+			[
+				"ctrl",
+				"ctrl_leg"
+			],
+			[
+				"grp",
+				"grp_ctrl_footPivot"
+			],
+			[
+				"Toe",
+				"Toe_Flap"
+			],
+			[
+				"col",
+				"colorIfFalseR"
+			],
+			[
+				"con",
+				"conNode_negballRoll"
+			],
+			[
+				"conNode",
+				"conNode_ballRoll"
+			],
+			[
+				"pma",
+				"pmaNode_ballRoll"
+			],
+			[
+				"conNo",
+				"conNode_negballRoll"
+			],
+			[
+				"connect",
+				"connectAttr"
+			],
+			[
+				"colo",
+				"colorIfTrueR"
+			],
+			[
+				"conN",
+				"conNode_ballRoll"
+			],
+			[
+				"as",
+				"asUtility"
+			],
+			[
+				"ikjt",
+				"ikjt_ankle"
+			],
+			[
+				"md",
+				"mdNode_AnkleStretch"
+			],
+			[
+				"mo",
+				"mdNode_AnkleStretch"
+			],
+			[
+				"out",
+				"outputX"
+			],
+			[
+				"input1",
+				"input1X"
+			],
+			[
+				"disD",
+				"disDimNode_legStretch"
+			],
+			[
+				"mdNode_L",
+				"mdNode_LegStretch"
+			],
+			[
+				"clamp",
+				"clampNode_LegStretch"
+			],
+			[
+				"input",
+				"input2X"
+			],
+			[
+				"input2",
+				"input2X"
+			],
+			[
+				"leg",
+				"legLen	statement"
+			],
+			[
+				"anke",
+				"ankleLen	statement"
+			],
+			[
+				"lctrDi",
+				"lctrDis_ankle"
+			],
+			[
+				"lct",
+				"lctrDis_hip"
+			],
+			[
+				"ikH",
+				"ikHandle_leg"
+			],
+			[
+				"in",
+				"input1Y"
+			],
+			[
+				"set",
+				"setAttr"
+			],
+			[
+				"ik",
+				"ikHandle_leg"
+			],
+			[
+				"pel",
+				"pelvisPos	statement"
+			],
+			[
+				"gr",
+				"grp_footPivot"
+			],
+			[
+				"bal",
+				"ballPos	statement"
+			],
+			[
+				"world",
+				"worldSpace"
+			],
+			[
+				"w",
+				"window	statement"
+			],
+			[
+				"cla",
+				"classmethod	class"
+			],
+			[
+				"co",
+				"commonButtons"
+			],
+			[
+				"comm",
+				"commonMenu"
+			],
+			[
+				"app",
+				"applyBtnCmd"
+			],
+			[
+				"act",
+				"actionBtnCmd"
+			],
+			[
+				"com",
+				"commonBtnSize"
+			],
+			[
+				"def",
+				"def	Function"
+			],
+			[
+				"de",
+				"def	Function"
+			],
+			[
+				"he",
+				"helpMenuCmd"
+			],
+			[
+				"menu",
+				"menuItem"
+			],
+			[
+				"listNu",
+				"listNumbersIsInstace"
+			],
+			[
+				"pr",
+				"print"
+			],
+			[
+				"sele",
+				"selectedTransformX"
+			],
+			[
+				"trans",
+				"selectedTransformX"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "{\n// ...\n\n\"settings\": {\n// ...\n\"python_interpreter_path\": \"D:/Program Files/Autodesk/Maya2014/bin/mayapy.exe\",\n\n\"python_package_paths\": [\n\"D:/Program Files/Autodesk/Maya2014/devkit/other/pymel/extras/completion/py/\",\n\"/home/sr/python_packages1\",\n\"/home/sr/python_packages2\",\n\"/home/sr/python_packages3\"\n]\n}\n}",
+			"settings":
+			{
+				"buffer_size": 308,
+				"line_ending": "Windows",
+				"name": "{"
+			}
+		}
+	],
+	"build_system": "Packages/Python/Python.sublime-build",
+	"command_palette":
+	{
+		"height": 380.0,
+		"selected_items":
+		[
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 146.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/Users/Toby/Documents/GitHub/Python101/rigging/rig_arm.py",
+		"/D/Users/Toby/Documents/maya/scripts/AR_QtConePtrWindow.py",
+		"/D/Users/Toby/Documents/GitHub/Python101/utils/pythonCommandPort.py",
+		"/D/Users/Toby/Documents/GitHub/Python101/MayaSublime.sublime-project",
+		"/D/Users/Toby/Documents/GitHub/Python101/userSetup.py",
+		"/D/Users/Toby/Documents/GitHub/Python101/test.py",
+		"/D/Users/Toby/Documents/maya/scripts/Project/test.py",
+		"/D/Users/Toby/Documents/maya/scripts/Project/mayaPython.sublime-project",
+		"/D/Users/Toby/Documents/Python Scripts/mayaPython.sublime-project",
+		"/D/Users/Toby/Documents/Python Scripts/test.py",
+		"/D/Users/Toby/Documents/Python Scripts/test",
+		"/D/Users/Toby/Documents/maya/2013-x64/scripts/functoolsTest.py",
+		"/D/Users/Toby/Documents/maya/2013-x64/scripts/TR_OptionsWindow.py",
+		"/D/Users/Toby/AppData/Roaming/Sublime Text 2/Packages/SendToMaya/send_to_maya.py",
+		"/D/Users/Toby/Documents/maya/scripts/jointNameTest.py",
+		"/D/Users/Toby/Documents/maya/scripts/joint3Chain.py",
+		"/D/Users/Toby/Documents/maya/scripts/rpIKControl.py",
+		"/D/Users/Toby/Documents/maya/scripts/script1_assignment.py",
+		"/D/Users/Toby/Desktop/week3_assets/week3Assignment.mel",
+		"/D/Users/Toby/Desktop/testingSublime.py",
+		"/D/Users/Toby/Documents/maya/scripts/vertexEmitters.py",
+		"/D/Users/Toby/Documents/maya/scripts/lists_py",
+		"/D/Users/Toby/Downloads/week2_assets/week2_assets/dictionaries.py",
+		"/D/Users/Toby/Documents/maya/scripts/logic.py",
+		"/D/Users/Toby/Documents/maya/scripts/dictionaries.py",
+		"/D/Users/Toby/Downloads/week2_assets/week2_assets/loops.py",
+		"/D/Users/Toby/Documents/maya/scripts/loops.py",
+		"/D/Users/Toby/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
+		"/D/Users/Toby/AppData/Roaming/Sublime Text 2/Packages/GetDocumentation/get_docs.py",
+		"/D/Users/Toby/AppData/Roaming/Sublime Text 2/Packages/Default/Default (Windows).sublime-keymap",
+		"/D/Users/Toby/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/D/Users/Toby/Desktop/week1_assets/get_docs.py",
+		"/D/Users/Toby/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/D/Users/Toby/AppData/Roaming/Sublime Text 2/Packages/SendToIpython/send_to_ipython.py"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"settings":
+					{
+						"buffer_size": 308,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								302,
+								302
+							]
+						],
+						"settings":
+						{
+							"auto_name": "{",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 118.0
+	},
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/D/Users/Toby/Documents/maya/scripts/Project/mayaPython.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}
