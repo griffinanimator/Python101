@@ -63,6 +63,7 @@ def createController(objectName="",position=[]):
         position=position
     else:
         position=mc.xform(objectName,worldSpace=True,t=True)
+
     # Create control group and transform group
     controlGroup=mc.group(name="ctrl_arm_L",em=True,w=True)
     transformGroup=mc.group(name="ORT_ikArm_L",em=True,w=True)
