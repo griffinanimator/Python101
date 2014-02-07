@@ -1,7 +1,7 @@
 import maya.cmds as mc
 
 # Function that creates and orients a 3 joint chain based off position array
-def jointChain(jointOrient="xyz",secondOrientAxis="yup"):
+def jointChain(jointOrient="xyz",secondOrientAxis="yup",prefix="",suffix=""):
     ''' Takes list of positions as argument '''
 
     worldPos=listPositions()
@@ -39,6 +39,20 @@ def listPositions():
     mc.select(clear=True)
     return positions
 
-jointChain()
 
 
+def jointName():
+    '''Finds the name of temporary object(s) for joint naming upon creation'''
+    # Store selection
+    selection = mc.ls(selection=True,long=True,dag=True)
+    # Validate selection
+    if len(selection) ==0:
+        print("Please Select object(s) to find the name of")
+    for item in selection:
+        # Remove groups from name
+        # Split
+        print(item)
+
+
+jointName()
+#jointChain()
