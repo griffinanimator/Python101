@@ -1,11 +1,30 @@
 import maya.cmds as mc
 
 arm_info={}
+locatorTransforms=[]
+locatorPositions=[]
+layoutJntInfo=[]
 
-# Layout joint list
-# Experiment with populating this from selection
-layoutJntInfo=(["ljnt_shoulderA",[0.0,0.0,2.0]],["ljnt_elbowA",[0.0,2.0,5.0]],["ljnt_wristA",[0.0,0.0,8.0]])
+# List locators in scene
+locators=mc.ls(type="locator")
 
+# Find transform nodes of locators
+for locator in locators:
+    transformNode=mc.listRelatives(locator,parent=True,type="transform")[0]
+    locatorTransforms.append(transformNode)
+
+# Find locator position
+for transform in locatorTransforms:
+    pos=mc.xform(transform,query=True, worldSpace=True,translation=True)
+    locatorPositions.append(pos)
+
+# Combine position and name lists
+# Populate layoutJntInfo with information
+for i in range(len(locatorTransforms)):
+    temp="{transformName}".format(transformName=locatorTransforms[i]),locatorPositions[i]
+    layoutJntInfo.append(temp)
+
+print(layoutJntInfo)
 # Build joints
 # Create empty list to store information
 ljntList = []
@@ -17,8 +36,9 @@ for jnt in layoutJntInfo:
     ljntList.append(layoutJnt)#
 print(ljntList)
 
-arm_info["ljntInfo"]=ljntList
+arm_info["ljntInfo"]=layoutJntInfo
 
+# Can't replace tuple, this loop is being fed wrong data type
 jntInfo = []
 mc.select(d=True)
 for ljnt in arm_info["ljntInfo"]:
@@ -34,22 +54,8 @@ ikh = mc.ikHandle(n="rpIK_l_arm01",solver="ikRPsolver",
     startJoint=arm_info["JntInfo"][0],endEffector=arm_info["JntInfo"][2])
 arm_info["IKH"]=ikh
 
-#------------------------------------------------------------------------------------------
-# Parent IK handle to the control
-# Find location of ikhandle
-ikPos=mc.xform(ikh[0],query=True,worldSpace=True,t=True)
-# Create an empty group to act as the controller, parent this to another null to store its
-# Transform and rotation values and keep the controller zeroed.
-ikControl=mc.group(name="ctrl_arm_L",em=True,w=True)
-ikTransform=mc.group(name="ORT_ikArm_L",em=True,w=True)
-mc.parent(ikControl,ikTransform)
-# Parent IK handle to the controller
-mc.xform(ikTransform,worldSpace=True,t=(ikPos[0],ikPos[1],ikPos[2]))
-mc.parent(ikh[0],ikControl)
-#------------------------------------------------------------------------------------------
 
-# Rewrite controller group creation as a function
-def createController(objectName="",position=[]):
+def createController(objectName="",position=[],name=""):
     '''
     Creates a controller group and a transform group at location
     Takes either an object name or position as argument.
@@ -57,16 +63,16 @@ def createController(objectName="",position=[]):
     # Validate arguments
     # If object name and position aren't given raise error
     if len(objectName)==0 and len(position) is not 3:
-        raise RuntimeError "You have not specified an object or position at which to create controller"
+        raise RuntimeError("You have not specified an object or position at which to create controller")
     # If object name is not given store position as position, else query object names position
     if len(objectName) == 0:
         position=position
     else:
-        position=mc.xform(objectName,worldSpace=True,t=True)
+        position=mc.xform(objectName,query=True,worldSpace=True,t=True)
 
     # Create control group and transform group
-    controlGroup=mc.group(name="ctrl_arm_L",em=True,w=True)
-    transformGroup=mc.group(name="ORT_ikArm_L",em=True,w=True)
+    controlGroup=mc.group(name="ctrl_{name}".format(name=name),em=True,w=True)
+    transformGroup=mc.group(name="ORT_{name}".format(name=name),em=True,w=True)
     mc.parent(controlGroup,transformGroup)
     # Position transform group at location
     mc.xform(transformGroup,worldSpace=True,t=(position[0],position[1],position[2]))
@@ -77,11 +83,13 @@ def createController(objectName="",position=[]):
         #mc.pointConstraint(controlGroup,objectName)
 
 # Create pole vector control.
-
+createController(position=poleVectorPosition(arm_info["JntInfo"][0],arm_info["JntInfo"][2])
 # Create a control transform function
 
 # Delete Layout Joints
-
-# Clean scene of empty transforms
 mc.select(arm_info["ljntInfo"])
 mc.delete()
+# Clean scene of empty transforms
+
+createController("ljnt_wrist",name="wrist_L")
+mc.pointConstraint("ctrl_wrist_L","rpIK_l_arm01")
