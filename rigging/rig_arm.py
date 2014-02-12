@@ -14,7 +14,7 @@ def jointChain(jointOrient="xyz",secondOrientAxis="yup",prefix="",suffix=""):
         jointList.append(joint)
 
     #orient joints
-    for item in jointList:
+    for item in jointList[0:-1]:
         mc.joint(item, edit=True, orientJoint="{jointOrient}".format(jointOrient=jointOrient),
             sao="{secondOrientAxis}".format(secondOrientAxis=secondOrientAxis))
 
@@ -54,5 +54,5 @@ def jointName():
         print(item)
 
 
-jointName()
-#jointChain()
+
+jointChain()

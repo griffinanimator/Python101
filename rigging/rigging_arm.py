@@ -1,4 +1,6 @@
 import maya.cmds as mc
+import json
+import tempfile
 
 arm_info={}
 locatorTransforms=[]
@@ -23,8 +25,22 @@ for transform in locatorTransforms:
 for i in range(len(locatorTransforms)):
     temp="{transformName}".format(transformName=locatorTransforms[i]),locatorPositions[i]
     layoutJntInfo.append(temp)
+# Delete locators
+mc.delete(locatorTransforms)
 
-print(layoutJntInfo)
+fileName="D:/Users/Toby/Documents/GitHub/Python101/data/locator_info.json"
+
+def writeJson(filename, data):
+    with open(fileName,"w") as outfile:
+        json.dump(data,outfile)
+
+    file.close(outfile)
+
+def readJson(fileName):
+    with open(fileName,"r") as infile:
+        data=(open(infile.name,"r").read())
+    return data
+
 # Build joints
 # Create empty list to store information
 ljntList = []
@@ -33,18 +49,16 @@ for jnt in layoutJntInfo:
     # Create joint based off layout joint info
     layoutJnt=mc.joint(name=jnt[0],position=jnt[1])
     # Append joint to layout list
-    ljntList.append(layoutJnt)#
-print(ljntList)
+    ljntList.append(layoutJnt)
 
 arm_info["ljntInfo"]=layoutJntInfo
 
-# Can't replace tuple, this loop is being fed wrong data type
 jntInfo = []
 mc.select(d=True)
 for ljnt in arm_info["ljntInfo"]:
     # Replace ljnt string with jnt
-    jntName = ljnt.replace("ljnt","jnt")
-    jntPos =mc.xform(ljnt,q=True,worldSpace=True,t=True)
+    jntName=ljnt[0].replace("ljnt","jnt")
+    jntPos=mc.xform(ljnt[0],q=True,worldSpace=True,t=True)
     mc.joint(name=jntName,position=jntPos)
     jntInfo.append(jntName)
 arm_info["JntInfo"]=jntInfo
@@ -53,7 +67,6 @@ arm_info["JntInfo"]=jntInfo
 ikh = mc.ikHandle(n="rpIK_l_arm01",solver="ikRPsolver",
     startJoint=arm_info["JntInfo"][0],endEffector=arm_info["JntInfo"][2])
 arm_info["IKH"]=ikh
-
 
 def createController(objectName="",position=[],name=""):
     '''
@@ -83,12 +96,12 @@ def createController(objectName="",position=[],name=""):
         #mc.pointConstraint(controlGroup,objectName)
 
 # Create pole vector control.
-createController(position=poleVectorPosition(arm_info["JntInfo"][0],arm_info["JntInfo"][2])
+#createController(position=poleVectorPosition(arm_info["JntInfo"][0],arm_info["JntInfo"][2])
 # Create a control transform function
 
 # Delete Layout Joints
-mc.select(arm_info["ljntInfo"])
-mc.delete()
+#mc.select(arm_info["ljntInfo"])
+#mc.delete()
 # Clean scene of empty transforms
 
 createController("ljnt_wrist",name="wrist_L")
