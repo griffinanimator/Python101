@@ -26,15 +26,16 @@ for i in range(len(locatorTransforms)):
     temp="{transformName}".format(transformName=locatorTransforms[i]),locatorPositions[i]
     layoutJntInfo.append(temp)
 # Delete locators
-mc.delete(locatorTransforms)
+#mc.delete(locatorTransforms)
 
-fileName="D:/Users/Toby/Documents/GitHub/Python101/data/locator_info.json"
-
-def writeJson(filename, data):
+jsonPath="D:/Users/Toby/Documents/GitHub/Python101/data/locator_info.json"
+def writeJson(fileName, data):
     with open(fileName,"w") as outfile:
         json.dump(data,outfile)
 
     file.close(outfile)
+
+writeJson(jsonPath,layoutJntInfo)
 
 def readJson(fileName):
     with open(fileName,"r") as infile:
@@ -52,6 +53,9 @@ for jnt in layoutJntInfo:
     ljntList.append(layoutJnt)
 
 arm_info["ljntInfo"]=layoutJntInfo
+
+def createJoints():
+    pass
 
 jntInfo = []
 mc.select(d=True)
