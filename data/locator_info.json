@@ -1,3 +1,4 @@
+import maya.cmds as cmds
 loc_info={}
 locator_info=['locCtrl_shld',[0.0,0.0,0.0]], ['locCtrl_elbow', [3.0, 0.0, -2.0]], ['locCtrl', [6.0, 0.0, 0.0]], ['locCtrl_wrist', [8.0, 0.0, 0.0]]
 
