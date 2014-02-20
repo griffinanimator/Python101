@@ -1,5 +1,5 @@
 loc_info={}
-locator_info=['locCtrl_shld',[0.0,0.0,0.0]], ['locCtrl_elbow', [3.0, 0.0, -3.0]], ['locCtrl_wrist', [5.0, 0.0, 0.0]]
+locator_info=['locCtrl_shld',[0.0,0.0,0.0]], ['locCtrl_elbow', [3.0, 0.0, -2.0]], ['locCtrl', [6.0, 0.0, 0.0]], ['locCtrl_wrist', [8.0, 0.0, 0.0]]
 
 locList=[]
 for loc in locator_info:
@@ -9,4 +9,7 @@ for loc in locator_info:
 locator_info_dictionary['names']= [locator_info[x][0] for x in range(len(locator_info))]
 locator_info_dictionary['positions']= [locator_info[x][1] for x in range(len(locator_info))]
 data=locator_info_dictionary
-print data     
+print data        
+
+
+    
