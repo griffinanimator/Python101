@@ -1,6 +1,7 @@
 import maya.cmds as mc
 import json
 import tempfile
+import pymel.core as pm
 
 arm_info={}
 locatorTransforms=[]
@@ -28,19 +29,7 @@ for i in range(len(locatorTransforms)):
 # Delete locators
 #mc.delete(locatorTransforms)
 
-jsonPath="D:/Users/Toby/Documents/GitHub/Python101/data/locator_info.json"
-def writeJson(fileName, data):
-    with open(fileName,"w") as outfile:
-        json.dump(data,outfile)
 
-    file.close(outfile)
-
-writeJson(jsonPath,layoutJntInfo)
-
-def readJson(fileName):
-    with open(fileName,"r") as infile:
-        data=(open(infile.name,"r").read())
-    return data
 
 # Build joints
 # Create empty list to store information
@@ -88,8 +77,8 @@ def createController(objectName="",position=[],name=""):
         position=mc.xform(objectName,query=True,worldSpace=True,t=True)
 
     # Create control group and transform group
-    controlGroup=mc.group(name="ctrl_{name}".format(name=name),em=True,w=True)
-    transformGroup=mc.group(name="ORT_{name}".format(name=name),em=True,w=True)
+    controlGroup=mc.group(name="ct_{name}".format(name=name),em=True,w=True)
+    transformGroup=mc.group(name="grp_{name}".format(name=name),em=True,w=True)
     mc.parent(controlGroup,transformGroup)
     # Position transform group at location
     mc.xform(transformGroup,worldSpace=True,t=(position[0],position[1],position[2]))

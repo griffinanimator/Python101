@@ -1,1 +1,1 @@
-[["locator1", [0.0, 0.0, 0.0]], ["locator2", [59.77941641590109, 0.0, 0.0]], ["locator3", [112.79915219278317, 0.0, 0.0]]]
+{"armJointNames": ["ljnt_Shoulder", "ljnt_Elbow", "ljnt_Wrist"], "armJointPositions": [[32, 0, 0], [64, 0, -16], [96, 0, 0]], "armIkHandle": ["ljnt_Shoulder", "ljnt_Wrist"]}
