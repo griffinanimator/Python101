@@ -34,17 +34,64 @@ class RDojo_UI:
         
         self.UIElements["guiFlowLayout1"] = cmds.flowLayout(v=False, width=windowWidth, height=windowHeight, bgc=[0.2, 0.2, 0.2])
 
-        # Rig arm button
+        # Load Layout button
         cmds.separator(p=self.UIElements["guiFlowLayout1"])
-        self.UIElements["rigarm_button"] = cmds.button(label='rig arm', width=buttonWidth, height=buttonHeight, p=self.UIElements["guiFlowLayout1"], c=self.rigArm) 
+        self.UIElements["loadLayout_button"] = cmds.button(label='load layout', width=buttonWidth, height=buttonHeight, p=self.UIElements["guiFlowLayout1"], c=self.createLayout) 
+
+        # Save Layout button
+        cmds.separator(p=self.UIElements["guiFlowLayout1"])
+        self.UIElements["saveLayout_button"] = cmds.button(label='save layout', width=buttonWidth, height=buttonHeight, p=self.UIElements["guiFlowLayout1"], c=self.saveLayout) 
+
+        # Rig leg button
+        cmds.separator(p=self.UIElements["guiFlowLayout1"])
+        self.UIElements["rigleg_button"] = cmds.button(label='rig leg', width=buttonWidth, height=buttonHeight, p=self.UIElements["guiFlowLayout1"], c=self.rigLeg) 
 
         """ Show the window"""
         cmds.showWindow(windowName)
 
+    def createLayout(self, *args):
+        basicFilter = "*.json"
+        fileName = cmds.fileDialog2(fileFilter=basicFilter, dialogStyle=2, fm=1, okc='Load')
 
+        # Read the Json file
+        data = json_utils.readJson(fileName)
+        info = json.loads( data )
 
-    def rigArm(self, *args):
-        import rigging.rig_arm as Rig_Arm
-        reload(Rig_Arm)
-        Rig_Arm = Rig_Arm.Rig_Arm()
-        Rig_Arm.rigArm()
+        # Lets use a loop to build locators
+        for i in range(len(info['names'])):
+            lctr = cmds.spaceLocator(name=info['names'][i])
+            # The position flag won't yield the desired
+            # results, so we position the locators after we 
+            # make them.
+            cmds.xform(lctr, ws=True, t=info['positions'][i])
+
+    def saveLayout(self, *args):
+        basicFilter = "*.json"
+        fileName = cmds.fileDialog2(fileFilter=basicFilter, dialogStyle=2, fm=1, okc='Save')
+        # Make a new dictionary to store the updated locator information.
+        newLctrInfo = {}
+        # Find the locators in the scene.
+        # * works as a wildcard in a string
+        cmds.select('lctr*')
+        # Store the selected locators to a variable
+        lctrSel = cmds.ls(sl=True, type='transform')
+        # Clear the selection
+        cmds.select(d=True)
+        # Now get the position of each locator.
+        # Make a new list to hold the positions.
+        lctrPositions = []
+        for each in lctrSel:
+            pos = cmds.xform(each, q=True, ws=True, t=True)
+            lctrPositions.append(pos)
+        # Now pop our lists into the dictionary.
+        newLctrInfo['names']=lctrSel
+        newLctrInfo['positions']=lctrPositions
+        # Define a path to save the json file.
+  
+        json_utils.writeJson(fileName, newLctrInfo)
+
+    def rigLeg(self, *args):
+        import rigging.rig_leg as Rig_Leg
+        reload(Rig_Leg)
+        Rig_Leg = Rig_Leg.Rig_Leg()
+        Rig_Leg.rigLeg()
