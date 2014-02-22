@@ -186,4 +186,4 @@ def UI():
     cmds.button( label="Create and orient joint hierachy", h = 30, en = True, command=myHiCallback)     
     cmds.showWindow()
  
-UI() 
+#UI() 
