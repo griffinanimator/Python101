@@ -1,10 +1,18 @@
 import os
 import sys
+import maya.cmds as cmds
 
-print sys.path
+cmds.upAxis( ax='y', rv=True )
+cmds.currentUnit( linear='cm' )
+cmds.currentUnit( time='ntsc' )
 
-sys.path.append("C:/Users/Ganapathi K A/Documents/GitHub/Python101/")
+def createMenu(*args):
+	mi = cmds.window( 'MayaWindow', ma=True, q=True)
+	for m in mi:
+		if m =='RDojo_Menu'
+			cmds.deleteUI('RDojo_Menu', m=True)
+	#to=tear off, p=parent to mayawindow
+	cmds.menu( 'RDojo_Menu', label='RDMenu', to=True, p='MayaWindow')
 
-import startup as startup
-reload (startup)
-print startup
+#calling function, () to call specific arguments
+createMenu()
