@@ -1,8 +1,7 @@
-import maya.cmds as cmds, json, io   
-                                                                
-
-
-
+import maya.cmds as cmds, json, io
+from maya import OpenMaya
+ 
+                                                               
     
 arm_name = { 
 'shoulder': 'lctr_l_arm1', 
@@ -18,8 +17,7 @@ def build_Locators():
     for key in data: #builds the locator according to the information in the loc_info dictionary
         locator = cmds.spaceLocator(n=key)[0] #creates the locator at world origin. Avoided using the position(p) flag becuause it positioned according to the local position, not translation
         cmds.xform(locator, t=data[key]) #changes translation of locator according to info in JSON
-    build_Joints()
-    
+    #build_Joints()    
     
 def get_Data():
     
@@ -94,7 +92,12 @@ def build_Ik(jnt):
     
     jntpos = cmds.xform(jnt[len(jnt)-2], q=True, t=True, ws = True)
     
-    ikrp = cmds.ikHandle(n=ikrpName, sj = jnt[0], ee= wristjnt)
+    pv_ctrl = poleVectorPos(jnt)
+    
+    ikrp = cmds.ikHandle(n=ikrpName, sj = jnt[0], ee= wristjnt, solver = 'ikRPsolver')
+    
+    cmds.poleVectorConstraint(pv_ctrl, ikrpName)
+   
     
     #create control
     ikcon = cmds.circle(n=ikname, nr= (1,0,0), r = 1.5)
@@ -107,12 +110,46 @@ def build_Ik(jnt):
 
     cmds.orientConstraint(ikcon, wristjnt)
     
-    #polevector const
+    cmds.pointConstraint(ikcon, pv_ctrl, mo=True) #contrains pv to wrist handle
     
-        
+    
+def poleVectorPos(jnt):
+
+    #get positions of joints
+    start = cmds.xform(jnt[0], q = 1, ws = 1, t = 1) # shoulder
+    mid = cmds.xform(jnt[1], q = 1, ws = 1, t = 1) #elbow
+    end = cmds.xform(jnt[2], q = 1, ws = 1, t = 1)#wrist
+
+    #create get the xyz vector postion of each joint
+    startV = OpenMaya.MVector(start[0], start[1], start[2])
+    midV = OpenMaya.MVector(mid[0], mid[1], mid[2])
+    endV = OpenMaya.MVector(end[0], end[1], end[2])
+
+
+    startEnd  = endV - startV
+    startMid = midV - startV
+
+    dotP = startMid * startEnd
+    proj = float(dotP) / float(startEnd.length())
+
+
+    startEndN = startEnd.normal() #return normalized value 
+
+    projV = startEndN * proj #figure projection vector
+
+    arrowV = startMid - projV
+
+    finalV = arrowV + midV
+
+    loc = cmds.spaceLocator(n = "armPV")[0]
+    cmds.xform(loc, ws =1, t =(finalV.x, finalV.y, finalV.z))
+    
+    return loc
+
+            
     
 
-build_Locators() 
+#build_Locators() 
 #build_Joints()       
 
      
