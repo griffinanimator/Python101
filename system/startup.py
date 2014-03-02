@@ -1,11 +1,13 @@
+import sys
 import maya.cmds as cmds
 import pymel.core as pm
 import rigging.rig_arm as arm
 reload(arm)
+import system.dojo_ui as dojo
+reload(dojo)
 #import data.loc_info as json
 
 cmds.currentUnit(linear='in')
-cmds.currentUnit(time='film')
 pm.mel.eval('setProject "C:/Users/Sarah/Desktop/test"')
 
 def create_Menu(*args):
@@ -14,11 +16,7 @@ def create_Menu(*args):
 		if m == 'RDojo_Menu':
 			cmds.deleteUI('RDojo_Menu', m=True)
 	cmds.menu('RDojo_Menu', label='RDMenu', to=True, p='MayaWindow')
-	#cmds.menuItem(label="arm", command= 'arm.call_To_Build_Loc()')
-
-def run_Script():
-	#C:\Users\Sarah\Documents\GitHub\Python101\rigging\rig_arm.py
-	print "HELLOO!"
+	#cmds.menuItem(label="arm", command= dojo.RDojo_UI)
 	
 create_Menu()
 

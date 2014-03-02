@@ -1,3 +1,5 @@
+
+
 import maya.cmds as cmds, json, io
 from maya import OpenMaya
  
@@ -17,7 +19,7 @@ def build_Locators():
     for key in data: #builds the locator according to the information in the loc_info dictionary
         locator = cmds.spaceLocator(n=key)[0] #creates the locator at world origin. Avoided using the position(p) flag becuause it positioned according to the local position, not translation
         cmds.xform(locator, t=data[key]) #changes translation of locator according to info in JSON
-    #build_Joints()    
+    build_Arm()    
     
 def get_Data():
     
@@ -58,10 +60,49 @@ def build_Joints():
     
     for i  in range(len(jnt)):
         cmds.joint(jnt[i], e=True, zso = True, oj = 'xyz')
+    return jnt
  
-    build_Ik(jnt)
+    #build_Ik(jnt)
+    #build_Fk(jnt)
     
-       
+def build_Arm():
+    joints = build_Joints() #joints
+    print joints
+    ikStuff = build_Ik(joints)
+    ik = ikStuff[0] #ik group
+    pv = ikStuff[1] #polevector
+    ikrp = ikStuff[2] #ikhandle
+    fk = build_Fk(joints) #fk groups
+    
+    
+    
+    #connect switch to ikRP IkBlend
+    cmds.connectAttr(pv + ".ikSwitch",ikrp + ".ikBlend") 
+    
+    #connect switch to ctrl grp visiblity
+    cmds.connectAttr(pv + ".ikSwitch",ik + ".visibility")
+    
+    for i in fk:
+        cmds.setDrivenKeyframe(i + ".visibility", cd = pv + ".ikSwitch", dv=0 )
+        cmds.setDrivenKeyframe(i + ".visibility", cd = pv + ".ikSwitch", dv=1, v=0 )
+    
+    #connect switch to jnt weights
+    
+    cmds.connectAttr(pv + ".ikSwitch",joints[2] + "_orientConstraint1.ctrl_ik_l_arm1W0")
+        
+    #fk wrist
+    cmds.setDrivenKeyframe("jnt_l_arm3_parentConstraint1.ctrl_fk_l_arm3W0", cd = pv + ".ikSwitch", dv=0 )
+    cmds.setDrivenKeyframe("jnt_l_arm3_parentConstraint1.ctrl_fk_l_arm3W0", cd = pv + ".ikSwitch", dv=1, v=0 )
+    
+    #fk elbow
+    cmds.setDrivenKeyframe("jnt_l_arm2_parentConstraint1.ctrl_fk_l_arm2W0", cd = pv + ".ikSwitch", dv=0 )
+    cmds.setDrivenKeyframe("jnt_l_arm2_parentConstraint1.ctrl_fk_l_arm2W0", cd = pv + ".ikSwitch", dv=1, v=0 )
+    
+    #fk shoulder
+    cmds.setDrivenKeyframe("jnt_l_arm1_parentConstraint1.ctrl_fk_l_arm1W0", cd = pv + ".ikSwitch", dv=0 )
+    cmds.setDrivenKeyframe("jnt_l_arm1_parentConstraint1.ctrl_fk_l_arm1W0", cd = pv + ".ikSwitch", dv=1, v=0 )
+        
+        
       
 def build_Fk(jnt):
     fkctrl = []
@@ -72,6 +113,7 @@ def build_Fk(jnt):
         name = jnt[i].replace('jnt', 'ctrl_fk')
         circle = cmds.circle(n=name, nr= (1,0,0), r = 1)
         cmds.xform(circle, t=jntpos)
+        cmds.makeIdentity(apply = True, t=1,r=1,s=1, n=0)
         grp = cmds.group(circle, n ="grp_" + name) #groups for controls
         cmds.parentConstraint(jnt[i], grp, mo=False) #temporary parent constraint to get right angle for control
         cmds.parentConstraint(jnt[i], grp, e=True, rm=True)
@@ -83,6 +125,8 @@ def build_Fk(jnt):
         
     for i in range(1, len(fkctrl)): #parent const ctrls to the upper in heirarchy for all controls but the first one
         cmds.parentConstraint(fkctrl[i-1], fkgroup[i], mo = True)
+    
+    return fkgroup
         
          
 def build_Ik(jnt): 
@@ -93,13 +137,14 @@ def build_Ik(jnt):
     jntpos = cmds.xform(jnt[len(jnt)-2], q=True, t=True, ws = True)
     
     pv_ctrl = poleVectorPos(jnt)
+    grp_pv_ctrl = cmds.group(pv_ctrl, n = "grp_" + pv_ctrl)
     
     ikrp = cmds.ikHandle(n=ikrpName, sj = jnt[0], ee= wristjnt, solver = 'ikRPsolver')
     
     cmds.poleVectorConstraint(pv_ctrl, ikrpName)
    
     
-    #create control
+    #create wrist control
     ikcon = cmds.circle(n=ikname, nr= (1,0,0), r = 1.5)
     cmds.xform(ikname, t=jntpos)
     grp =  cmds.group(ikname, n ="grp_" + ikname)
@@ -110,7 +155,9 @@ def build_Ik(jnt):
 
     cmds.orientConstraint(ikcon, wristjnt)
     
-    cmds.pointConstraint(ikcon, pv_ctrl, mo=True) #contrains pv to wrist handle
+    cmds.pointConstraint(ikcon, grp_pv_ctrl, mo=True) #contrains pv to wrist handle
+    
+    return grp, pv_ctrl,ikrpName
     
     
 def poleVectorPos(jnt):
@@ -143,6 +190,9 @@ def poleVectorPos(jnt):
 
     loc = cmds.spaceLocator(n = "armPV")[0]
     cmds.xform(loc, ws =1, t =(finalV.x, finalV.y, finalV.z))
+    cmds.select(loc)
+    cmds.addAttr(nn = "ikSwitch", ln = "ikSwitch", attributeType = 'long', min = 0, max = 1, k=True)
+    cmds.select(d=True)
     
     return loc
 
