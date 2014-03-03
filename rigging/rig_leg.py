@@ -9,6 +9,10 @@ import utils.rig_utils as rig_utils
 reload(rig_utils)
 import tempfile
 
+
+TITLE = "LEG"
+
+
 # The UI class
 class Rig_Leg:
 

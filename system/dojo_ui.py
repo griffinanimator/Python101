@@ -3,8 +3,8 @@ import json
 import tempfile
 
 # Import our json_utils module
-import utils.json_utils as json_utils
-reload(json_utils)
+#import utils.json_utils as json_utils
+#reload(json_utils)
 
 # The UI class
 class RDojo_UI:
