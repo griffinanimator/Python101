@@ -1,3 +1,9 @@
-locator_info=['locCtrl',[0.0,0.0,0.0]], ['locCtrl2', [3.0, 0.0, -2.0]], ['locCtrl3', [6.0, 0.0, 0.0]], ['locCtrl4', [8.0, 0.0, 0.0]]
+import maya.cmds as cmds
+loc_info={}
+locator_info=['locCtrl',[0.0,0.0,0.0]], ['locCtrl02', [3.0, 0.0, -2.0]], ['locCtrl03', [6.0, 0.0, 0.0]], ['locCtrl04', [8.0, 0.0, 0.0]]
 
-    
+locList=[]
+for loc in locator_info:
+    locLyt=cmds.spaceLocator(name=loc[0], position=loc[1])
+    locPiv=cmds.CenterPivot()
+    locList.append(locLyt)
