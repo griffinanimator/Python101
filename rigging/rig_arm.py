@@ -1,5 +1,7 @@
 import maya.cmds as cmds, json, io
 from maya import OpenMaya
+import rigging.xfile_utils as util
+reload(util)
  
 class rig_arm:                                                               
     
@@ -9,6 +11,8 @@ class rig_arm:
         'elbow': 'lctr_l_arm2', 
         'wrist' : 'lctr_l_arm3', 
         'palm' : 'lctr_l_armEnd'} #dictonary to store locator names
+
+        self.fileclass = util.fileManager()
 
 
     def build_Locators(self, *args): 
@@ -21,29 +25,28 @@ class rig_arm:
         #build_Arm()    
         
     def get_Data(self,*args):
-        
-        locs_pos = self.write_JSON(self.arm_name)[0] #locator position
-        file = self.write_JSON(self.arm_name)[1] #locator name
+
+        locs_pos = self.writeToJSON(self.arm_name) #locator position
+        #file = util.write_JSON(self.arm_name)[1] #locator name
         data = json.loads(locs_pos) #loads information from JSON file to data variable
         
         return data
         
 
-    def write_JSON(self, arm_name):
+    def writeToJSON(self, arm_name):
         
         loc_info = {
-        arm_name['shoulder']: (0, 14.311348, 0.0477619), 
-        arm_name['elbow']: (0, 8.52323, -2.195134), 
-        arm_name['wrist']:(0, 1.613664, -0.422523), 
-        arm_name['palm']: (0, 0.492216, 0.373344) 
+        arm_name['shoulder']: (0, 6.855, 0.048), 
+        arm_name['elbow']: (0, 4.83, -1.237), 
+        arm_name['wrist']:(0, 3.068, -0.423), 
+        arm_name['palm']: (0, 2.29, 0.755) 
         } #dictionary to store "default" locator positions
         
         file = "C:\Users\Sarah\Documents\GitHub\Python101\data\loc_info.json"
-        fout = open(file, 'w') #"opens" up file to be written in
-        locDump = json.dumps(loc_info, fout, indent=3) #writes in file
-        fout.close() 
+
+        JSON = self.fileclass.write_JSON(file, loc_info)
         
-        return locDump, file
+        return JSON
        
 
     def build_Joints(self,*args):

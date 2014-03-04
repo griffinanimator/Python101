@@ -3,10 +3,6 @@ import maya.cmds as cmds
 import pymel.core as pm
 import system.dojo_ui as dojo
 reload(dojo)
-#import data.loc_info as json
-
-cmds.currentUnit(linear='in')
-pm.mel.eval('setProject "C:/Users/Sarah/Desktop/test"')
 
 def create_Menu(*args):
 	maya_Window = cmds.window('MayaWindow', ma=True, q=True)

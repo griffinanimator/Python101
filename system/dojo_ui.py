@@ -1,6 +1,8 @@
 import maya.cmds as cmds
 import rigging.rig_arm as arm
 reload(arm)
+import rigging.xfile_utils as util
+reload(util)
 
 class RDojo_UI:
 
@@ -26,7 +28,7 @@ class RDojo_UI:
         cmds.separator(p= self.UIElements["guiFlowlayout1"])
         self.UIElements["layout_button"] = cmds.button(label = "layout", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.createLyt)
         self.UIElements["build_button"] = cmds.button(label = "build", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.createArm)
-        self.UIElements["save_button"] = cmds.button(label = "save", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.createLyt)
+        self.UIElements["save_button"] = cmds.button(label = "save", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.saveArm)
         self.UIElements["load_button"] = cmds.button(label = "load", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.createLyt)
 
         cmds.showWindow(windowName)
@@ -38,3 +40,7 @@ class RDojo_UI:
     def createArm(self, *args):
         armLayout = arm.rig_arm()
         armLayout.build_Arm()
+
+    def saveArm(self, *args):
+        save = util.fileManager()
+        save.createCharFolder()
