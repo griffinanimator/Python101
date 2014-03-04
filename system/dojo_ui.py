@@ -1,5 +1,9 @@
 import maya.cmds as cmds
+import json
+import tempfile
 
+import utils.json_utils as json_utils
+reload(json_utils)
 
 
 class Practice_UI:
@@ -33,16 +37,14 @@ class Practice_UI:
         cmds.showWindow(windowName)
         
     def createLyt(self, *args):
+        basicFilter="*.json"
+        fileName=cmds.fileDialog2(fileFilter=basicFilter, dialogStyle=2, fn=1, okc='Load')
         
-        loc_info={}
-        locator_info=['locCtrl_shld',[0.0,0.0,0.0]], ['locCtrl_elbow', [3.0, 0.0, -2.0]], ['locCtrl', [6.0, 0.0, 0.0]], ['locCtrl_wrist', [8.0, 0.0, 0.0]]
-
-        locList=[]
-        for loc in locator_info:
-            locLyt=cmds.spaceLocator(name=loc[0], position=loc[1])
-            locPiv=cmds.CenterPivot()
-            locList.append(locLyt)
-            
+        data=json_utils.readJson(fileName)
+        info=json.loads(data)
+                              
+        
+        
             
 
 
