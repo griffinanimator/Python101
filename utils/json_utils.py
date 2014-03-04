@@ -1,4 +1,4 @@
-filename='C:/Users/Family/Documents/GitHub/Python101/data/locator_info.json'
+fileName='C:/Users/Family/Documents/GitHub/Python101/data/locator_info.json'
 
 def writeJson(fileName, data):
 	with open(fileName, 'w') as outfile:
