@@ -1,1 +1,1 @@
-{"armJointNames": ["ljnt_Shoulder", "ljnt_Elbow", "ljnt_Wrist"], "armJointPositions": [[32, 0, 0], [64, 0, -16], [96, 0, 0]], "armIkHandle": ["ljnt_Shoulder", "ljnt_Wrist"]}
+{"IKJointNames": ["jnt_IKShoulder", "jnt_IKElbow", "jnt_IKWrist"], "FKJointNames": ["jnt_FKShoulder", "jnt_FKElbow", "jnt_FKWrist"], "armJointNames": ["jnt_Shoulder", "jnt_Elbow", "jnt_Wrist"], "armJointPositions": [[32, 0, 0], [64, 0, -16], [96, 0, 0]], "armIkHandle": ["jnt_IKShoulder", "jnt_IKWrist"]}
