@@ -1,5 +1,5 @@
 import maya.cmds as cmds
-import rigging.awMirrorObjectsTool as awMOTInstance
+import rigging.tools.awMirrorObjectsTool as awMOTInstance
 
 class awArmCreator():
     def __init__(self):
@@ -17,13 +17,15 @@ class awArmCreator():
         cmds.button('place lox', c=self.awTestIfArmExists)
         cmds.button('place joints', c=self.awCreateArmJoints)
         cmds.button('broken hi', c=self.awCreateBrokenHierarchy)
-        cmds.button('duplicate', c=self.awCreateTripleChain)
         cmds.button('connect', c=self.awConnectArmTripleChain)
         cmds.button('group', c=self.awCreateBrokenHierarchyPartTwo)
         cmds.button('mirror', c=self.awMirrorArmChain)
+        cmds.button('create ik', c=self.createIKChain)
+        
         cmds.showWindow('awArmCreateUI')
     #####Locators
     def awPlaceArmLocators(self, name, parent=None, *args):
+        #self.armLocators = []
         locName = ('JntLoc_' + str(name))
         makeLoc = cmds.spaceLocator(n=locName, p=(0, 0, 0))[0]
         self.armLocators.append(makeLoc)
@@ -45,6 +47,7 @@ class awArmCreator():
     #####Joints
     def awPlaceArmJoints(self, *args):
         print self.armLocators
+        #self.armJoints = []
         for loc in self.armLocators:
             cmds.select(d=True)
             jntName = loc.replace('JntLoc_', 'bn_')
@@ -64,15 +67,23 @@ class awArmCreator():
         cmds.parent('bn_L_shoulder', w=True)
         ###When you come back to this, orient the joints correctly and don't forget to orient the clavicle end joint 
         ###to zero it out, as well as the wrist. You'll have to orient both chains. 
-    def awCreateTripleChain(self, *args):
-        cmds.select('bn_L_shoulder')
-        sel = cmds.ls(sl=1)
-        for each in sel:
-            ikName = each.replace('bn_', 'jDrvIK_')
-            fkName = each.replace('bn_', 'jDrvFK_')
-            cmds.duplicate(each, n=fkName)
-            cmds.duplicate(each, n=ikName)
 
+    ####Create IK Chain
+    def createIKChain(self, *args):
+        cmds.duplicate('bn_L_shoulder', n='jDrvIK_L_shoulder')
+        sel = cmds.pickWalk(d='down')
+        renm = sel.replace('bn_', 'jDrvIK')
+            #sel2=cmds.ls(sl=1)
+            #sel2.replace('bn_', 'jDrvIK_')
+            #cmds.pickWalk(d='down')
+            
+            
+            
+            
+    
+    
+    
+    
     def awConnectArmTripleChain(self, *args):
         cmds.select('jDrvIK_L_shoulder', 'jDrvFK_L_shoulder', 'bn_L_shoulder')
         chainSel = cmds.ls(sl=1)
@@ -86,6 +97,8 @@ class awArmCreator():
     def awMirrorArmChain(self, *args):
         awMOT = awMOTInstance.awMirrorObjects()
         awMOT.awMirrorObjects()
+        
+        
 
         
     def awCreateArmJoints(self, *args):
