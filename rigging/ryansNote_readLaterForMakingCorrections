@@ -1,0 +1,11 @@
+Run this in Maya
+import rigging.awRig as awrig
+print awrig
+AwRig = awrig.awQuickRigger()
+print AwRig
+AwRig.hierarchy
+You can get the Ui like this.
+AwRig.UI_()
+Basically you import awRig module into the awrig namespace. You now have a unique instance of that module
+Then you can assign the awQuickRigger class to a variable
+and call any of the methods from that class

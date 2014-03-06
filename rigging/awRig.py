@@ -1,5 +1,9 @@
 import maya.cmds as cmds
 from maya import OpenMaya
+import rigging.awLegLocSetup as awLegLocSetupInstance
+
+
+
 
 class awQuickRigger():
     def __init__(self):
@@ -86,6 +90,8 @@ class awQuickRigger():
         cmds.separator(h=200, style='none')
         cmds.text('Leg Setup', align='left')
         cmds.separator(h=15, style='none')
+        cmds.button('launch leg rigger', c=self.loadAwLegLocSetup)
+        cmds.button('placeLegJoints', c=self.awPlaceLegJoints)
         cmds.separator(h=200, style='none')
         cmds.separator(h=200, style='none')
         cmds.text('Spine Setup', align='left')
@@ -126,6 +132,24 @@ class awQuickRigger():
         
         cmds.showWindow('AlexRigger')
 
+    def loadAwLegLocSetup(self, *args):
+        awLegLoc = awLegLocSetupInstance.awLegLoc()
+        awLegLoc.awCreateLegLocs()
+
+    def awPlaceLegJoints(self, *args):
+        awLegJoint = awLegLocSetupInstance.awLegLoc()
+        awLegJoint.awPlaceLegJoints()
+
+        '''
+        #NOT NEEDED FOR NOW, JUST KEEP HERE IN CASE ERRORS COME UP
+        reload(rigging.awLegLocSetup)
+        rigging.awLegLocSetup.awLegLoc.awCreateLegLocs()
+        '''
+        
+    def loadAwCreateLegJoints(self, *args):
+        pass
+    
+    
     def curveTest(self, *args):
         locatorPos = cmds.ls(sl=1)
         for loc in locatorPos:
@@ -190,9 +214,11 @@ class awQuickRigger():
     def awPlaceJoints(self, *args):
         print self.locators
         for loc in self.locators:
+            cmds.select(d=True)
             jntName = loc.replace('JntLoc_', 'bn_')
+            
             makeJnt = cmds.joint(name=jntName, p=(0, 0, 0))
-            cmds.parent(makeJnt, w=True)
+            #cmds.parent(makeJnt, w=True)
             self.joints.append(makeJnt)
             parentGet = cmds.listRelatives(loc, p=True)
             if parentGet:
