@@ -6,7 +6,8 @@ version = 'v 0.01'
 class awPicker():
 
     def __init__(self, *args):
-        self.widgets = {}
+        self.UIElements = {}
+        #self.widgets = {}
 
     def buildUI(self, *args):
         if cmds.window('awCharacterPicker', exists=True):

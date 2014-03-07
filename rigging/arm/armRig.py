@@ -1,5 +1,6 @@
 import maya.cmds as cmds
 import rigging.tools.awMirrorObjectsTool as awMOTInstance
+import pymel as pm
 
 class awArmCreator():
     def __init__(self):
@@ -9,6 +10,10 @@ class awArmCreator():
                              'L_hand':{'pos':[5.327, 12.50, 0], 'children':[]}}
         self.armLocators = []
         self.armJoints = []
+        self.ikJoints = []
+        self.fkJoints = []
+        
+        
     def UI_(self, *args):
         if cmds.window('awArmCreateUI', exists=True):
             cmds.deleteUI('awArmCreateUI')
@@ -69,13 +74,15 @@ class awArmCreator():
         ###to zero it out, as well as the wrist. You'll have to orient both chains. 
 
     ####Create IK Chain
-    def createIKChain(self, *args):
-        cmds.duplicate('bn_L_shoulder', n='jDrvIK_L_shoulder')
-        sel = cmds.pickWalk(d='down')
-        renm = sel.replace('bn_', 'jDrvIK')
-            #sel2=cmds.ls(sl=1)
-            #sel2.replace('bn_', 'jDrvIK_')
-            #cmds.pickWalk(d='down')
+    def createIKChain(self, name, *args):
+        ikChain = cmds.duplicate('bn_L_shoulder', n='jDrvIK_L_shoulder')
+        self.ikJoints.append(ikChain)
+        jntSel = cmds.ls(sl=1)
+        for jnt in self.ikJoints:
+            jntIKName = jnt.replace('bn_', 'jDrvIK')
+            cmds.joint(e=True, n=jntIKName)
+        print 'this is the list' + self.ikJoints
+        
             
             
             
@@ -102,7 +109,7 @@ class awArmCreator():
 
         
     def awCreateArmJoints(self, *args):
-        self.awPlaceArmJoints()
+        self.awPlaceArmJoints('L_clavicle')
  
         
         

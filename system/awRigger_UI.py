@@ -3,8 +3,8 @@ import rigging.awLegLocSetup as awLegLocSetupInstance
 import rigging.spine.spineLocSetup as awSpineLocSetupInstance
 import rigging.tools.lraOffTool as lraOffToolInstance
 import rigging.awGrouper as awGroupInstance
+import rigging.tools.awOrientJointTool as awOrientJointInstance
 import sys
-import 
 
 class alexWidenerRigger_UI:
     def __init__(self, *args):
@@ -140,6 +140,8 @@ class alexWidenerRigger_UI:
             if on == 1:
                 cmds.toggle(la=True)
     def loadAwOrientJointTool(self, *args):
+        awOJ = awOrientJointInstance.awOrientJoint()
+        #awOJ.awOrientJoint()
         
         
         
