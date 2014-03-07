@@ -1,7 +1,7 @@
 import maya.cmds as cmds
 import rigging.rig_arm as arm
 reload(arm)
-import rigging.xfile_utils as util
+import util.file_utils as util
 reload(util)
 
 class RDojo_UI:
@@ -29,7 +29,7 @@ class RDojo_UI:
         self.UIElements["layout_button"] = cmds.button(label = "layout", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.createLyt)
         self.UIElements["build_button"] = cmds.button(label = "build", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.createArm)
         self.UIElements["save_button"] = cmds.button(label = "save", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.saveArm)
-        self.UIElements["load_button"] = cmds.button(label = "load", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.createLyt)
+        self.UIElements["load_button"] = cmds.button(label = "load", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.loadArm)
 
         cmds.showWindow(windowName)
 
@@ -44,3 +44,7 @@ class RDojo_UI:
     def saveArm(self, *args):
         save = util.fileManager()
         save.createCharFolder()
+
+    def loadArm(self, *args):
+        load = util.fileManager()
+        load.loadScene()

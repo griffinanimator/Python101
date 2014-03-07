@@ -1,6 +1,6 @@
 import maya.cmds as cmds, json, io
 from maya import OpenMaya
-import rigging.xfile_utils as util
+import util.file_utils as util
 reload(util)
  
 class rig_arm:                                                               
