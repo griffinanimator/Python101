@@ -1,42 +1,67 @@
-import maya.cmds as cmds
+import maya.cmds as mc
+import json
+import utils.jsonUtils as jsonUtils
+import maya.OpenMaya as om
 
-def createJointChain(info, prefix, *args):
-    print info
-    # Clear the selection
-    cmds.select(d=True)
-    # Build the joints
-    jntList = []
-    for i in range(len(info['names'])):
-        # Make a name for the joint.
-        jntName = info['names'][i].replace('lctr', prefix)
-        jnt = cmds.joint(name=jntName, position=info['positions'][i], a=True)
-        jntList.append(jnt)
-        
-    # Make sure the new joint chain is oriented.
-    cmds.joint(jntList[0], edit=True, oj='xyz', sao='yup', ch=True, zso=True)
-    # We don't need that last joint so delete it.
-    # Find the last item in jntList
-    jlLen = len(jntList)
-    cmds.delete(jntList[jlLen-1])
-    # Remove the last joint from jntList
-    jntList.pop(jlLen-1)
-    # Return the list of joints
-    return jntList
 
-def createIk(ikJnts):
-	ikInfo = []
-	ikhName = ikJnts[2].replace('ikj', 'ikh')
-	ikh = cmds.ikHandle(n=ikhName, sj=ikJnts[0], ee=ikJnts[2], sol='ikRPsolver', p=2, w=.5 )
-	# Make a poleVector
-	pvCon = cmds.spaceLocator(n=ikhName+'_pv')
-	tmpCon = cmds.parentConstraint(ikJnts[1], pvCon, mo=False)
-	cmds.delete(tmpCon) 
-	cmds.move(-1, pvCon, r=True, z=True )
-	cmds.makeIdentity(pvCon, apply=True )
-	# Creat a pv constraint
-	cmds.poleVectorConstraint( pvCon, ikh[0] )
-	return ikh
+jsonPath="C:/Users/Ganapathi K A/Documents/GitHub/Python101/data/locator_info.json"
+armData=jsonUtils.readJson(jsonPath)
+armData=json.loads(armData)
 
-def importControlObject(ctrlFile):
-	print ctrlFile
-	cmds.file(ctrlFile, i=True)
+
+def createJoints(jointNames,jointPositions,*args):
+    for i in range(len(jointNames)):
+        # replace ljnt prefix with the correct prefix
+        #jointName = jointNames[i].replace("ljnt","jnt")
+        # create joint chain
+        position=jointPositions[i]
+        mc.joint(name="{jointNames}".format(jointNames=jointNames[i]),
+            position=position)
+    mc.select(clear=True)
+
+def constrainJoints(jointNames,*args):
+    constraintList=[]
+    for i in range(len(jointNames)):
+        # Parent constrain drive bones to IK and FK arm chains
+        constraints = mc.parentConstraint(IKJointNames[i],FKJointNames[i],jointNames[i], mo =True)
+
+        # Edit constraint weight to IK by default
+        mc.setAttr("{constraints}.{FKJointNames}W1".format(constraints=constraints[0],FKJointNames=FKJointNames[i]),0)
+        constraintList.append(constraints)
+    return constraintList
+
+def poleVectorPosition(*args):
+    for joint in ikJoints:
+        position = mc.xform(joint, query = True, translation = True, worldSpace = True)
+        jointPosition.append(position)
+
+    position = mc.listRelatives(selection[1], parent = True)
+    position = mc.xform(position, query = True, translation = True, worldSpace = True)
+    jointPosition.append(position)
+
+    # Determine position of Pole Vector Control
+    A = om.MVector(jointPosition[0][0],jointPosition[0][1],jointPosition[0][2])
+    B = om.MVector(jointPosition[1][0],jointPosition[1][1],jointPosition[1][2])
+    C = om.MVector(jointPosition[2][0],jointPosition[2][1],jointPosition[2][2])
+
+    D = B -A
+    E = A + (D * 0.5)
+    F = C - E
+    G = C + (F * 2)
+
+    PVPosition = [G[0], G[1], G[2]]
+
+    return PVPosition
+
+ikHandlePosition=armData["armIkHandle"]
+def rpIKHandle(*args):
+    mc.ikHandle(name=IKHandleName,startJoint=ikHandlePosition[0],endEffector=ikHandlePosition[1], solver="ikRPsolver")
+
+def createController(*args):
+    # Create control group and transform group
+    controlGroup=mc.group(name="ct_{name}".format(name=name),em=True,w=True)
+    transformGroup=mc.group(name="grp_{name}".format(name=name),em=True,w=True)
+    mc.parent(controlGroup,transformGroup)
+    # Position transform group at location
+    mc.xform(transformGroup,worldSpace=True,t=(jointPositions[0],jointPositions[1],jointPositions[2]))
+    return controlGroup, transformGroup

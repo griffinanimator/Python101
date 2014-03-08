@@ -1,46 +1,58 @@
 import maya.cmds as mc
 
-#Creates locators in defined positions
-locList = (['loc_clavicleA', [0.0, 0.0, 0.0]], ['loc_shldrA',[10.0, 2.0, 0.0]], ['loc_elbowA',[30.0, 2.0, -2.0]], ['loc_wristA',[50.0, 2.0, 0.0]], ['loc_palmA',[60.0, 2.0, 0.0]])
-cmds.select(d=True)
-for l in range(len(locList)):
-    print l
-    print locList[l][0]
-    print locList[l][1]
-    mc.spaceLocator(n=locList[l][0], p=locList[l][1])
+# Function that creates and orients a 3 joint chain based off position array
+def jointChain(jointOrient="xyz",secondOrientAxis="yup",prefix="",suffix=""):
+    ''' Takes list of positions as argument '''
 
-#Centrepivot the locators please
+    worldPos=listPositions()
+    jointList=[]
 
-"""Break"""
+    # Create number of joints equal to length of list, at the positions in the list
+    for i in range(len(worldPos)):
+        transform = worldPos[i]
+        joint=mc.joint(position=(transform[0],transform[1],transform[2]),)
+        jointList.append(joint)
 
-#Creates joints in defined postions
-jointList = (['jnt_clavicleA', [0.0, 0.0, 0.0]], ['jnt_shldrA',[10.0, 2.0, 0.0]], ['jnt_elbowA',[30.0, 2.0, -2.0]], ['jnt_wristA',[50.0, 2.0, 0.0]], ['jnt_palmA',[60.0, 2.0, 0.0]])
-cmds.select(d=True)
-for j in range(len(jointList)):
-    print j
-    print jointList[j][0]
-    print jointList[j][1]
-    cmds.joint(n=jointList[j][0], p=jointList[j][1])
+    #orient joints
+    for item in jointList[0:-1]:
+        mc.joint(item, edit=True, orientJoint="{jointOrient}".format(jointOrient=jointOrient),
+            sao="{secondOrientAxis}".format(secondOrientAxis=secondOrientAxis))
 
-    """Break"""
-    
-#Moves joints to locator (need help on snapping multiple joints to respective locators with same prefix eg:loc_) 
-locPos = cmds.xform('loc_clavicleA', q=True, t=True, ws=True)
-cmds.xform('jnt_clavicleA', t=locPos)
+    mc.select(clear=True)
 
-#Create ikHandle from jnt_shldrA to jnt_wristA
-cmds.ikHandle(n= "l_ikh_arm", sj= "jnt_shldrA", ee= "jnt_wristA", sol = "ikRPsolver")
-cmds.ikHandle(n= "sch_wrist", sj= "jnt_wristA", ee= "jnt_palmA", sol = "ikSCsolver")
 
-#Parent,Rename and delete extra control
-cmds.rename('loc_wristA', 'l_ctrl_hand')
-cmds.delete('loc_shldrA', 'loc_clavicleA', 'loc_elbowA')
-cmds.parent('l_ikh_arm', 'l_ctrl_hand')
-cmds.parent('sch_wrist', 'loc_palmA')
-cmds.group('loc_palmA', 'grp_wrist')
 
-#create locator as pole vector, postion of pole vector not defined(to learn)
-mc.spaceLocator(n='l_ctrPv_arm')
-elbowPos = cmds.xform('jnt_elbowA', q=True, ws=True, t=True)
-cmds.xform('l_ctrPv_arm', ws=True, t=elbowPos)
-cmds.poleVectorConstraint ('l_ctrPv_arm', 'l_ikh_arm', weight=1)
+def listPositions():
+    '''Takes a selection argument'''
+    positions=[]
+
+    # Store selection
+    selection = mc.ls(selection=True,)
+    # Validate selection of at least one object
+    if len(selection) == 0:
+        print("Please Select object(s) to list world position of")
+    # Iterate through selection query world position
+    for item in selection:
+        position=mc.xform(item, query=True, worldSpace=True, translation=True,)
+        # Add world positions to positions list
+        positions.append(position)
+    mc.select(clear=True)
+    return positions
+
+
+
+def jointName():
+    '''Finds the name of temporary object(s) for joint naming upon creation'''
+    # Store selection
+    selection = mc.ls(selection=True,long=True,dag=True)
+    # Validate selection
+    if len(selection) ==0:
+        print("Please Select object(s) to find the name of")
+    for item in selection:
+        # Remove groups from name
+        # Split
+        print(item)
+
+
+
+jointChain()

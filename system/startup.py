@@ -1,15 +1,23 @@
-import os
-import sys
+import maya.cmds as mc
 
-print sys.path
+mc.upAxis(ax="y",rv=True)
+mc.currentUnit(linear="cm")
+mc.currentUnit(time="ntsc")
 
-sys.path.append("C:/Users/Ganapathi K A/Documents/GitHub/Python101/")
+def createMenu(*args):
+    mi=mc.window("MayaWindow", ma=True, q=True)
+    for m in mi:
+        if m =="RDojo_Menu":
+            mc.deleteUI("RDojo_Menu", m=True)
+    
+    mc.menu("RDojo_Menu", label="RDMenu", to=True, p="MayaWindow")
+    riggingTools=mc.menuItem(label="Rigging Tools",subMenu=True)
+    mc.menuItem(label="Create Layout", parent=riggingTools, command=createUI)
 
-def loadUI(*args):
-    import system.dojo_ui as dojoui
-    dojoui = dojoui.RDojo_UI()
-    dojoui.ui()
+def createUI(*args):
+    import system.dojo_ui as dojo_ui
+    reload (dojo_ui)
+    rdUI=dojo_ui.RDojo_UI()
+    rdUI.ui()
 
-import startup as startup
-reload (startup)
-print startup
+createMenu()
