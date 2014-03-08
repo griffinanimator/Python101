@@ -76,9 +76,11 @@ class awArmCreator():
     ####Create IK Chain
     def createIKChain(self, name, *args):
         ikChain = cmds.duplicate('bn_L_shoulder', n='jDrvIK_L_shoulder')
-        self.ikJoints.append(ikChain)
-        jntSel = cmds.ls(sl=1)
+        cmds.select(hi=True)
+        ikChainSel = cmds.ls(sl=1)
+        self.ikJoints.append(ikChainSel)
         for jnt in self.ikJoints:
+            cmds.select(d=True)
             jntIKName = jnt.replace('bn_', 'jDrvIK')
             cmds.joint(e=True, n=jntIKName)
         print 'this is the list' + self.ikJoints

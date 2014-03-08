@@ -19,13 +19,15 @@ class awSpineCall():
 
     def seeIfJoints01Exists(self, *args):
         if cmds.objExists('joints01'):
+            cmds.select(cl=True)
             self.awCreateSpineLocs()
         else:
             cmds.warning('You need to create the group hierarchy so I can place everything in the correct place')
 
     def seeIfLocatorsExist(self, *args):
         if cmds.objExists('JntLoc_root01'):
-            self.awCreateJoints()
+            cmds.select(cl=True)
+            self.awCreateSpineJoints()
         else:
             cmds.warning('You have to place joints before you can build the bones')
 
@@ -42,9 +44,10 @@ class awSpineCall():
 
     def awCreateSpineLocs(self, *args):
         self.awPlaceSpineLocs('root01')
-        cmds.parent('JntLoc_root01', 'joints01')
+        cmds.select(cl=True)
+        cmds.parent('JntLoc_root01', 'locators01')
             
-    def awPlaceJoints(self, *args):
+    def awPlaceSpineJoints(self, *args):
         for loc in self.spineLocators:
             cmds.select(d=True)
             jntName = loc.replace('JntLoc_', 'bn_')
@@ -56,10 +59,10 @@ class awSpineCall():
             jntConstraint = cmds.parentConstraint(loc, makeJnt)
             cmds.delete(jntConstraint)
 
-    def awCreateJoints(self, *args):
-        self.awPlaceJoints()
+    def awCreateSpineJoints(self, *args):
+        self.awPlaceSpineJoints()
         cmds.select(cl=True)
-        
+
     def UI_(self, *args):
         if cmds.window('spineTest', exists=True):
             cmds.deleteUI('spineTest')
@@ -69,9 +72,9 @@ class awSpineCall():
         cmds.button(c=self.seeIfLocatorsExist)
 
         cmds.showWindow('spineTest')
-
 start = awSpineCall()
 start.UI_()
+
 
 
 

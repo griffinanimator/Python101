@@ -40,8 +40,8 @@ class awLegLoc:
             cmds.delete(jntConstraint)
 
     def awCreateLegJoints(self, *args):
-        self.awPlaceLegJoints()
-        
+        self.awPlaceLegJoints('JntLoc_L_thigh')
+
 '''
 start = awLegLoc()
 start.awCreateLegLocs()

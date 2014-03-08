@@ -1,5 +1,6 @@
 import maya.cmds as cmds
-import rigging.awLegLocSetup as awLegLocSetupInstance
+import rigging.leg.awLegLocSetup as awLegLocSetupInstance
+
 import rigging.spine.spineLocSetup as awSpineLocSetupInstance
 import rigging.tools.lraOffTool as lraOffToolInstance
 import rigging.awGrouper as awGroupInstance
@@ -82,6 +83,13 @@ class alexWidenerRigger_UI:
                                                           p=self.UIElements["ToolsAtTheTopLayout"],
                                                           bgc=[0, 0, 0],
                                                           c=self.loadAwLegLocSetup)
+        
+        self.UIElements["leg joints button"] = cmds.button(label="legJoints",
+                                                           w=buttonWidth,
+                                                           h=buttonHeight,
+                                                           p=self.UIElements["ToolsAtTheTopLayout"],
+                                                           bgc=[0, 0, 0],
+                                                           c=self.loadAwCreateLegJoints)
         cmds.separator(h=15, p=self.UIElements["ToolsAtTheTopLayout"])
         
         cmds.text('Spine', align='left', p=self.UIElements["ToolsAtTheTopLayout"])
@@ -116,6 +124,10 @@ class alexWidenerRigger_UI:
     def loadAwLegLocSetup(self, *args):
         awLegLoc = awLegLocSetupInstance.awLegLoc()
         awLegLoc.awCreateLegLocs()
+        
+    def loadAwCreateLegJoints(self, *args):
+        awLegJoints = awLegLocSetupInstance.awLegLoc()
+        awLegJoints.awCreateLegJoints()
         
     def loadAwSpineLocSetup(self, *args):
         awSpineLoc = awSpineLocSetupInstance.awSpineCall()
