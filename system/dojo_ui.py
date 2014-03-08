@@ -1,7 +1,9 @@
 import maya.cmds as mc
-import data.character_parts as character_parts
 import json
-import trArmRig as AR
+import os
+import sys
+import rigging.trArmRig as ArmRig
+
 # UI Class
 class RDojo_UI:
 
@@ -22,21 +24,56 @@ class RDojo_UI:
         if mc.window(self.window,exists=True):
             mc.deleteUI(self.window,window=True)
         # create window
-        self.UIElements["window"]=mc.window(self.window,title=self.title,widthHeight=self.size,sizeable=False)
+        self.UIElements["window"]=mc.window(self.window,title=self.title,sizeable=False,resizeToFitChildren=True)
         buttonHeight=30
         buttonWidth=100
         # create default form layout
         self.UIElements["formLayout1"]=mc.formLayout(numberOfDivisions=100)
-        self.UIElements["layout_Button"]=mc.button(label="Layout Button",width=buttonWidth,height=buttonHeight,parent=self.UIElements["formLayout1"],command=AR.createJoints)
-
+        self.UIElements["buildButton"]=mc.button(label="Build Rig",width=buttonWidth,height=buttonHeight,parent=self.UIElements["formLayout1"],command=arm.install)
+        self.UIElements["rigModulesTSL"]=mc.textScrollList("Rig_Modules_TSL",parent=self.UIElements["formLayout1"])
+        self.UIElements["StoreLayoutButton"]=mc.button(label="Write Layout Button",width=buttonWidth,height=buttonHeight,parent=self.UIElements["formLayout1"])
+        self.UIElements["RigModuleLabel"]=mc.text(label="Rig Modules")
         mc.formLayout(self.UIElements["formLayout1"],edit=True,
-            attachForm=[(self.UIElements["layout_Button"],"bottom",5),(self.UIElements["layout_Button"],"left",5),(self.UIElements["layout_Button"],"right",5)],
-            attachControl=[],
+            attachForm=[(self.UIElements["RigModuleLabel"],"top",5),(self.UIElements["buildButton"],"bottom",5),(self.UIElements["buildButton"],"left",5),(self.UIElements["buildButton"],"right",5),
+            (self.UIElements["rigModulesTSL"],"left",5),(self.UIElements["rigModulesTSL"],"right",5),(self.UIElements["StoreLayoutButton"],"left",5),(self.UIElements["StoreLayoutButton"],"right",5),
+            (self.UIElements["RigModuleLabel"],"right",5),(self.UIElements["RigModuleLabel"],"left",5)],
+            attachControl=[(self.UIElements["rigModulesTSL"],"bottom",5,self.UIElements["StoreLayoutButton"]),(self.UIElements["rigModulesTSL"],"top",5,self.UIElements["RigModuleLabel"]),
+            (self.UIElements["StoreLayoutButton"],"bottom",5,self.UIElements["buildButton"])],
             attachPosition=[],
-            attachNone=[(self.UIElements["layout_Button"],"top")],
+            attachNone=[]
             )
+
+
         # Show Window
         mc.showWindow(self.window)
 
+    def findAllFiles(fileDirectory,fileExtension):
+        # Return list of file names with extension
+        allFile = os.listdir(fileDirectory)
 
+        # Refine file list to the just files with specified extension
+        returnFiles=[]
+        for f in allFiles:
+            splitString = str(f).rpartition(fileExtension)
 
+            if not splitString[1] == " and splitString[2] == ":
+                returnFiles.append(splitString[0])
+
+        return returnFiles
+
+    def returnMods(path):
+        # search directory for available modules
+        allPyFiles = findAllFiles(path,".py")
+
+        returnModules =[]
+
+        for file in allPyFiles:
+            if file !="__init__":
+                returnModules.append(file)
+
+        return returnModules
+
+    path = "D:/Users/Toby/Documents/GitHub/Python101/rigging"
+
+arm =ArmRig()
+arm.install()

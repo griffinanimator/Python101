@@ -3,12 +3,6 @@ import json
 import utils.jsonUtils as jsonUtils
 import maya.OpenMaya as om
 
-
-jsonPath="D:/Users/Toby/Documents/GitHub/Python101/data/locator_info.json"
-armData=jsonUtils.readJson(jsonPath)
-armData=json.loads(armData)
-
-
 def createJoints(jointNames,jointPositions,*args):
     for i in range(len(jointNames)):
         # replace ljnt prefix with the correct prefix
@@ -19,7 +13,7 @@ def createJoints(jointNames,jointPositions,*args):
             position=position)
     mc.select(clear=True)
 
-def constrainJoints(jointNames,*args):
+def constrainJoints(jointNames,IKJointNames,FKJointNames,*args):
     constraintList=[]
     for i in range(len(jointNames)):
         # Parent constrain drive bones to IK and FK arm chains
@@ -27,15 +21,19 @@ def constrainJoints(jointNames,*args):
 
         # Edit constraint weight to IK by default
         mc.setAttr("{constraints}.{FKJointNames}W1".format(constraints=constraints[0],FKJointNames=FKJointNames[i]),0)
-        constraintList.append(constraints)
+        print(constraints)
+        constraintList.append(constraints[0])
+
     return constraintList
 
-def poleVectorPosition(*args):
+def poleVectorPosition(ikJoints,*args):
+    jointPosition=[]
+
     for joint in ikJoints:
         position = mc.xform(joint, query = True, translation = True, worldSpace = True)
         jointPosition.append(position)
 
-    position = mc.listRelatives(selection[1], parent = True)
+    position = mc.listRelatives(ikJoints[1], parent = True)
     position = mc.xform(position, query = True, translation = True, worldSpace = True)
     jointPosition.append(position)
 
@@ -53,11 +51,10 @@ def poleVectorPosition(*args):
 
     return PVPosition
 
-ikHandlePosition=armData["armIkHandle"]
-def rpIKHandle(*args):
+def rpIKHandle(IKHandleName,ikHandlePosition,*args):
     mc.ikHandle(name=IKHandleName,startJoint=ikHandlePosition[0],endEffector=ikHandlePosition[1], solver="ikRPsolver")
 
-def createController(*args):
+def createController(jointPositions,name,*args):
     # Create control group and transform group
     controlGroup=mc.group(name="ct_{name}".format(name=name),em=True,w=True)
     transformGroup=mc.group(name="grp_{name}".format(name=name),em=True,w=True)
