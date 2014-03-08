@@ -9,40 +9,26 @@ armData=jsonUtils.readJson(jsonPath)
 armData=json.loads(armData)
 
 
-def createJoints(*args):
+def createJoints(jointNames,jointPositions,*args):
     for i in range(len(jointNames)):
         # replace ljnt prefix with the correct prefix
         #jointName = jointNames[i].replace("ljnt","jnt")
         # create joint chain
+        position=jointPositions[i]
         mc.joint(name="{jointNames}".format(jointNames=jointNames[i]),
-            position=jointPositions[i])
+            position=position)
     mc.select(clear=True)
 
-jointNames=armData["armJointNames"]
-jointPositions=armData["armJointPositions"]
-suffix="L"
-
-createJoints(jointNames,jointPositions)
-
-jointNames=armData["IKJointNames"]
-createJoints(jointNames,jointPositions)
-
-jointNames=armData["FKJointNames"]
-createJoints(jointNames,jointPositions)
-
-jointNames=armData["armJointNames"]
-IKJointNames=armData["IKJointNames"]
-FKJointNames=armData["FKJointNames"]
-
-def constrainJoints(*args):
+def constrainJoints(jointNames,*args):
+    constraintList=[]
     for i in range(len(jointNames)):
         # Parent constrain drive bones to IK and FK arm chains
-        pc = mc.parentConstraint(IKJointNames[i],FKJointNames[i],jointNames[i], mo =True)
+        constraints = mc.parentConstraint(IKJointNames[i],FKJointNames[i],jointNames[i], mo =True)
 
         # Edit constraint weight to IK by default
-        mc.setAttr("{pc}.{FKJointNames}W1".format(pc=pc[0],FKJointNames=FKJointNames[i]),0)
-
-constrainJoints(jointNames,IKJointNames,FKJointNames)
+        mc.setAttr("{constraints}.{FKJointNames}W1".format(constraints=constraints[0],FKJointNames=FKJointNames[i]),0)
+        constraintList.append(constraints)
+    return constraintList
 
 def poleVectorPosition(*args):
     for joint in ikJoints:
@@ -66,16 +52,10 @@ def poleVectorPosition(*args):
     PVPosition = [G[0], G[1], G[2]]
 
     return PVPosition
-ikJoints=armData["armIkHandle"]
-
 
 ikHandlePosition=armData["armIkHandle"]
 def rpIKHandle(*args):
     mc.ikHandle(name=IKHandleName,startJoint=ikHandlePosition[0],endEffector=ikHandlePosition[1], solver="ikRPsolver")
-
-IKHandleName="ikHandle_arm_L"
-rpIKHandle(ikHandlePosition)
-
 
 def createController(*args):
     # Create control group and transform group
@@ -84,7 +64,4 @@ def createController(*args):
     mc.parent(controlGroup,transformGroup)
     # Position transform group at location
     mc.xform(transformGroup,worldSpace=True,t=(jointPositions[0],jointPositions[1],jointPositions[2]))
-
-name="IKHand"
-jointPositions=armData["armJointPositions"][2]
-createController(jointPositions,name)
+    return controlGroup, transformGroup
