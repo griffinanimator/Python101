@@ -2,7 +2,7 @@ import maya.cmds as mc
 import json
 import os
 import sys
-import rigging.trArmRig as ArmRig
+import rigging.trArmRig as trArmRig
 
 # UI Class
 class RDojo_UI:
@@ -75,5 +75,4 @@ class RDojo_UI:
 
     path = "D:/Users/Toby/Documents/GitHub/Python101/rigging"
 
-arm =ArmRig()
-arm.install()
+arm = trArmRig.ArmRig()
