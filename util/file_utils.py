@@ -7,11 +7,26 @@ class fileManager:
         print "fileManager!"
 
     def write_JSON(self,fileName, info):
-        print fileName
+        '''print fileName
         fout = open(fileName, 'w') #"opens" up file to be written in
         infoDump = json.dumps(info, fout, indent=3) #writes in file
-        fout.close()
-        return infoDump
+        fout.close()'''
+        print type(fileName)
+
+        with open(fileName, 'w') as outfile:
+            json.dump(info,outfile,ensure_ascii=False)
+            print "yep"
+        print "done"
+
+    def get_JSON(self, fileName):
+        print "yes"
+        d = json.load(open(fileName,'r'))
+        print d
+        return d
+
+
+
+
 
     def dialogbox(self, message):
 
@@ -37,14 +52,14 @@ class fileManager:
         self.saveScene(name, newpath)
     
     def saveScene(self, name, newpath):
-
+        #DESEELCT
         file1 = cmds.file(rename=name+".ma")
         cmds.file(save=True, type = 'mayaAscii')
         long =  cmds.file(q=True,sceneName = True)
         short =  cmds.file(q=True, sceneName= True, shortName = True)
         new = newpath+short
 
-        cmds.file(new, type = 'mayaAscii', er=True)
+        cmds.file(new, type = 'mayaAscii', es=True) 
 
     def loadScene(self):
         name = self.dialogbox("File Name")

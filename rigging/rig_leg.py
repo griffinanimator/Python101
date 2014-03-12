@@ -8,10 +8,10 @@ class rig_arm:
     
     def __init__(self, *args):
         self.loc_info = {
-        'lctr_l_arm1': (0, 6.855, 0.048), 
-        'lctr_l_arm2': (0, 4.83, -1.237), 
-       'lctr_l_arm3':(0, 3.068, -0.423), 
-        'lctr_l_armEnd': (0, 2.29, 0.755) 
+        'lctr_l_leg1': (0, 6.222, 0.048), 
+        'lctr_l_leg2': (0, 3.344, 0.892), 
+       'lctr_l_leg3':(0, 0.757, -0.423), 
+        'lctr_l_legEnd': (0, 0.009, 1.318) 
         }
 
         self.fileclass = util.fileManager()
@@ -34,7 +34,7 @@ class rig_arm:
         
          #dictionary to store "default" locator positions
         
-        file = "C:\Users\Sarah\Documents\GitHub\Python101\data\Armloc_info.json" 
+        file = "C:\Users\Sarah\Documents\GitHub\Python101\data\Legloc_info.json" 
 
         if cmds.file(file, q=True, ex = True) is True:
             JSON = self.fileclass.get_JSON(file)

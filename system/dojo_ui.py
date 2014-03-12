@@ -26,6 +26,9 @@ class RDojo_UI:
         self.UIElements["guiFlowlayout1"] = cmds.flowLayout(v=True, width = windowWidth, height = windowHeight, bgc = [0.2,0.2,0.2]) #flowLayout is simplest layout. Uses 1 column
 
         cmds.separator(p= self.UIElements["guiFlowlayout1"])
+        cmds.radioCollection()
+        cmds.radioButton(label = 'Arm', sl=True)
+        cmds.radioButton(label = 'Leg')   
         self.UIElements["layout_button"] = cmds.button(label = "layout", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.createLyt)
         self.UIElements["build_button"] = cmds.button(label = "build", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.createArm)
         self.UIElements["save_button"] = cmds.button(label = "save", width = buttonWidth, height = buttonHeight, p = self.UIElements["guiFlowlayout1"], c=self.saveArm)
