@@ -1,13 +1,13 @@
-fileName='C:/Users/Family/Documents/GitHub/Python101/data/locator_info.json'
+import json
 
-def writeJson(fileName, data):
+def writeJson(fileName, data, *args):
 	with open(fileName, 'w') as outfile:
 		json.dump(data, outfile)
 
 	file.close(outfile)
 
-def readJson(fileName):
-	with open(fileName, 'r') as infile:
-		data=(open(infile.name, 'r').read())
+def readJson(fileName, *args):
+	print fileName
+	with open(fileName[0], 'r') as infile:
+		data = (open(infile.name, 'r').read())
 	return data
-	
