@@ -4,32 +4,20 @@ import pymel.core as pm
 class fileManager:
 
     def __init__(self, *args):
-        print "fileManager!"
+        return None
+        
 
-    def write_JSON(self,fileName, info):
-        '''print fileName
-        fout = open(fileName, 'w') #"opens" up file to be written in
-        infoDump = json.dumps(info, fout, indent=3) #writes in file
-        fout.close()'''
-        print type(fileName)
-
+    def write_JSON(self,fileName, info): #writes JSON file of limb joint positions
         with open(fileName, 'w') as outfile:
             json.dump(info,outfile,ensure_ascii=False)
-            print "yep"
-        print "done"
 
-    def get_JSON(self, fileName):
-        print "yes"
+
+    def get_JSON(self, fileName): #gets the JSON file of the joints' positions
         d = json.load(open(fileName,'r'))
-        print d
         return d
 
 
-
-
-
-    def dialogbox(self, message):
-
+    def dialogbox(self, message): #dialog box for entering character name for saving and retrieving the file
         result = cmds.promptDialog(
                 title='Character',
                 message= message,
@@ -43,16 +31,13 @@ class fileManager:
                 return name
 
 
-    def createCharFolder(self):
+    def createCharFolder(self): #creates a folder to store the character file
         name = self.dialogbox("Character Name")
-        print name
         newpath = r"C:/"+ name + "/"
         if not os.path.exists(newpath): os.makedirs(newpath)
-        #different variation of name for file
         self.saveScene(name, newpath)
     
-    def saveScene(self, name, newpath):
-        #DESEELCT
+    def saveScene(self, name, newpath): #saves the scene
         file1 = cmds.file(rename=name+".ma")
         cmds.file(save=True, type = 'mayaAscii')
         long =  cmds.file(q=True,sceneName = True)
@@ -61,29 +46,7 @@ class fileManager:
 
         cmds.file(new, type = 'mayaAscii', es=True) 
 
-    def loadScene(self):
+    def loadScene(self): #loads it as a reference
         name = self.dialogbox("File Name")
-        print cmds.file(name, q=True, ex=True)
-
         loc =  cmds.file(name, q=True, loc = True)
-
         cmds.file(loc, r=True)
-
-
-
-        #if check is True:
-            #cmds.file()
-
-
-
-                
-
-
-
-    #query file name
-    #if file exists, reference it in scene
-
-
-
-
-

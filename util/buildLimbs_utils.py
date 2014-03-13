@@ -9,24 +9,24 @@ class build_Limbs:
         self.fileclass = util.fileManager()
 
 
-    def build_Locators(self, data, *args): 
-
+    def build_Locators(self, data, buttonSide, *args): 
         for key in data: #builds the locator according to the information in the loc_info dictionary
-            locator = cmds.spaceLocator(n=key)[0] #creates the locator at world origin. Avoided using the position(p) flag becuause it positioned according to the local position, not translation
+            if cmds.radioButton(buttonSide[1], q=True, sl=True) is True:
+                right = key.replace("_l_", "_r_")
+                locator = cmds.sphere(n=right, r=.3)[0] #creates the locator at world origin. Avoided using the position(p) flag becuause it positioned according to the local position, not translation
+            else:
+                locator = cmds.sphere(n=key, r=.3)[0] #creates the locator at world origin. Avoided using the position(p) flag becuause it positioned according to the local position, not translation
             cmds.xform(locator, t=data[key]) #changes translation of locator according to info in JSON
-        #build_Arm()    
+     
         
     def get_Data(self,*args):
 
         locs_pos = self.writeToJSON(self.arm_name) #locator position
-        #file = util.write_JSON(self.arm_name)[1] #locator name
         data = json.loads(locs_pos) #loads information from JSON file to data variable
-        
         return data
         
 
     def writeToJSON(self, arm_name):
-        
         loc_info = {
         arm_name['shoulder']: (0, 6.855, 0.048), 
         arm_name['elbow']: (0, 4.83, -1.237), 
@@ -42,8 +42,6 @@ class build_Limbs:
 
 
     def build_Arm(self,ikrp,ik,pv, joints,fk,*args):
-
-
         #connect switch to ikRP IkBlend
         cmds.connectAttr(pv + ".ikSwitch",ikrp + ".ikBlend") 
         
@@ -60,22 +58,38 @@ class build_Limbs:
    
         cmds.connectAttr(pv + ".ikSwitch", orientConstName)
 
-
         for i in range(len(joints)-1):
-            constName = cmds.parentConstraint(joints[i], q=True, n=True) + "." + cmds.parentConstraint(joints[i],q=True,wal = True)[0]
+            if i is not 2:
+                constName = cmds.orientConstraint(joints[i], q=True, n=True) + "." + cmds.orientConstraint(joints[i],q=True,wal = True)[0]
+            else:
+                constName = cmds.orientConstraint(joints[i], q=True, n=True) + "." + cmds.orientConstraint(joints[i],q=True,wal = True)[1]
 
             cmds.setDrivenKeyframe(constName, cd = pv + ".ikSwitch", dv=0 )
             cmds.setDrivenKeyframe(constName, cd = pv + ".ikSwitch", dv=1, v=0 )
+
+        
         
 
-    def build_Joints(self, position, *args):
+    def build_Joints(self, position, buttonSide, *args):
         jnt = []
         for key in sorted(position): #sorted so joints will be in correct order
             name = key.replace('lctr','jnt')
-            locPos = cmds.xform(key, q=True, t=True, ws = True) #gets locator position
-            buildJnt= cmds.joint(n=name, p=locPos) #creates joints in locator's position
-            jnt.append(buildJnt)
-            cmds.delete(key) #deletes locator
+            
+            if cmds.radioButton(buttonSide[1], q=True, sl=True) is True:
+                rightloc = key.replace("_l_", "_r_")
+                rightjnt = name.replace("_l_", "_r_")
+
+                locPos = cmds.xform(rightloc, q=True, t=True, ws = True) #gets locator position
+
+                buildJnt= cmds.joint(n=rightjnt, p=locPos) #creates joints in locator's position
+                jnt.append(buildJnt)
+                cmds.delete(rightloc)
+            else: 
+                locPos = cmds.xform(key, q=True, t=True, ws = True) #gets locator position
+                buildJnt= cmds.joint(n=name, p=locPos) #creates joints in locator's position
+                jnt.append(buildJnt)
+                cmds.delete(key)
+             #deletes locator
         
         for i  in range(len(jnt)):
             cmds.joint(jnt[i], e=True, zso = True, oj = 'xyz')
@@ -98,7 +112,7 @@ class build_Limbs:
             cmds.parentConstraint(jnt[i], grp, e=True, rm=True)
              
             fkgroup.append(grp)
-            cmds.parentConstraint(circle, jnt[i])
+            cmds.orientConstraint(circle, jnt[i])
             
             fkctrl.append(circle)
             
@@ -108,16 +122,16 @@ class build_Limbs:
         return fkgroup
             
              
-    def build_Ik(self,jnt): 
+    def build_Ik(self,jnt,buttonSide): 
         ikrpName= jnt[0].replace('jnt', 'ikRP')
         ikname = jnt[0].replace('jnt', 'ctrl_ik') 
         wristjnt = jnt[len(jnt)-2]
         
-        jntpos = cmds.xform(jnt[len(jnt)-2], q=True, t=True, ws = True)
+        jntpos = cmds.xform(jnt[len(jnt)-2], q=True, t=True, ws = True) #gets joint positions
         
-        pv_ctrl = self.poleVectorPos(jnt)
-        grp_pv_ctrl = cmds.group(pv_ctrl, n = "grp_" + pv_ctrl)
-        
+        grp_pv_ctrl = self.poleVectorPos(jnt,buttonSide)
+        pv_ctrl = cmds.listRelatives(grp_pv_ctrl, c=True)[0]
+               
         ikrp = cmds.ikHandle(n=ikrpName, sj = jnt[0], ee= wristjnt, solver = 'ikRPsolver')
         
         cmds.poleVectorConstraint(pv_ctrl, ikrpName)
@@ -125,22 +139,21 @@ class build_Limbs:
         
         #create wrist control
         ikcon = cmds.circle(n=ikname, nr= (1,0,0), r = 1.5)
-        cmds.xform(ikname, t=jntpos)
         grp =  cmds.group(ikname, n ="grp_" + ikname)
+        cmds.xform(grp, t=jntpos)
         cmds.parentConstraint(wristjnt, grp, mo=False)
         cmds.parentConstraint(wristjnt, grp, e=True, rm=True)
         
         cmds.pointConstraint(ikcon, ikrpName)
 
-        cmds.orientConstraint(ikcon, wristjnt)
+        cmds.orientConstraint(ikcon, wristjnt, mo=True)
         
         cmds.pointConstraint(ikcon, grp_pv_ctrl, mo=True) #contrains pv to wrist handle
         
         return grp, pv_ctrl,ikrpName
         
         
-    def poleVectorPos(self,jnt):
-
+    def poleVectorPos(self,jnt,buttonSide):
         #get positions of joints
         start = cmds.xform(jnt[0], q = 1, ws = 1, t = 1) # shoulder
         mid = cmds.xform(jnt[1], q = 1, ws = 1, t = 1) #elbow
@@ -167,24 +180,22 @@ class build_Limbs:
 
         finalV = arrowV + midV
 
-        loc = cmds.spaceLocator(n = "armPV")[0]
-        cmds.xform(loc, ws =1, t =(finalV.x, finalV.y, finalV.z))
+        if "arm" in jnt[0]:
+            if cmds.radioButton(buttonSide[1],q = True, sl = True) is True:
+                loc = cmds.spaceLocator(n = "r_armPV")[0]
+            else:
+                loc = cmds.spaceLocator(n = "l_armPV")[0]
+        elif "leg" in jnt[0]:
+            if cmds.radioButton(buttonSide[1],q = True, sl = True) is True:
+                loc = cmds.spaceLocator(n = "r_legPV")[0]
+            else:
+                loc = cmds.spaceLocator(n = "l_legPV")[0]
+        else:
+            print "Something is wrong with the Pole Vector"
+        grp_pv_ctrl = cmds.group(loc, n = "grp_" + loc)
+        cmds.xform(grp_pv_ctrl, ws =1, t =(finalV.x, finalV.y, finalV.z))
         cmds.select(loc)
         cmds.addAttr(nn = "ikSwitch", ln = "ikSwitch", attributeType = 'long', min = 0, max = 1, k=True)
         cmds.select(d=True)
         
-        return loc
-
-                
-        
-
-    #build_Locators() 
-    #build_Joints()       
-
-         
-    
-
-    
-    
-
-                                                                            
+        return grp_pv_ctrl
