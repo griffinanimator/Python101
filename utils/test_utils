@@ -1,0 +1,5 @@
+import maya.cmds as cmds
+arm_info={}
+buildJoints=(['jnt_a', [0.0,1.0,-1.0]], ['jnt_b', [0.0,1.0,-5.0]], ['jnt_c', [0.0,1.0,-9.0]], ['jnt_d', [0.0,1.0,-12.0]], ['jnt_e', [0.0,1.0, -15.0]])
+for jnt in buildJoints:
+    cmds.joint(name=jnt[0], position=jnt[1])
