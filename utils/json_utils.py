@@ -1,6 +1,10 @@
 import json
+<<<<<<< HEAD
 
 def writeJson(fileName, data, *args):
+=======
+def writeJson(fileName, data):
+>>>>>>> More examples
 	with open(fileName, 'w') as outfile:
 		json.dump(data, outfile)
 
