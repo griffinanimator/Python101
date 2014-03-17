@@ -1,8 +1,11 @@
 import maya.cmds as mc
 import json
+import data.jsonUtils as jsonUtils
 import os
 import sys
 import rigging.trArmRig as trArmRig
+
+UIData="D:/Users/Toby/Documents/GitHub/Python101/data/UIElements"
 
 # UI Class
 class RDojo_UI:
@@ -30,7 +33,7 @@ class RDojo_UI:
         # create default form layout
         self.UIElements["formLayout1"]=mc.formLayout(numberOfDivisions=100)
         self.UIElements["buildButton"]=mc.button(label="Build Rig",width=buttonWidth,height=buttonHeight,parent=self.UIElements["formLayout1"],command=arm.install)
-        self.UIElements["rigModulesTSL"]=mc.textScrollList("Rig_Modules_TSL",parent=self.UIElements["formLayout1"])
+        self.UIElements["rigModulesTSL"]=mc.textScrollList("Rig_Modules_TSL",parent=self.UIElements["formLayout1"],allowMultiSelection=False)
         self.UIElements["StoreLayoutButton"]=mc.button(label="Write Layout Button",width=buttonWidth,height=buttonHeight,parent=self.UIElements["formLayout1"])
         self.UIElements["RigModuleLabel"]=mc.text(label="Rig Modules")
         mc.formLayout(self.UIElements["formLayout1"],edit=True,
@@ -43,36 +46,55 @@ class RDojo_UI:
             attachNone=[]
             )
 
+        mc.textScrollList(self.UIElements["rigModulesTSL"],edit=True,append=returnMods(filePath))
 
+        jsonUtils.writeJson(UIData,self.UIElements)
         # Show Window
         mc.showWindow(self.window)
 
-    def findAllFiles(fileDirectory,fileExtension):
-        # Return list of file names with extension
-        allFile = os.listdir(fileDirectory)
+    arm = trArmRig.ArmRig()
 
-        # Refine file list to the just files with specified extension
-        returnFiles=[]
-        for f in allFiles:
-            splitString = str(f).rpartition(fileExtension)
+filePath = "D:/Users/Toby/Documents/GitHub/Python101/rigging"
 
-            if not splitString[1] == " and splitString[2] == ":
+def findAllFiles(fileDirectory,fileExtension):
+    # Return list of file names with extension
+    allFiles = os.listdir(fileDirectory)
+
+    # Refine file list to the just files with specified extension
+    returnFiles=[]
+    for f in allFiles:
+        splitString = str(f).rpartition(fileExtension)
+
+        if not splitString[1] == " and splitString[2] == ":
                 returnFiles.append(splitString[0])
 
-        return returnFiles
+    return returnFiles
 
-    def returnMods(path):
-        # search directory for available modules
-        allPyFiles = findAllFiles(path,".py")
+def returnMods(path):
+    # search directory for available modules
+    allPyFiles = findAllFiles(path,".py")
 
-        returnModules =[]
+    returnModules =[]
 
-        for file in allPyFiles:
-            if file !="__init__":
-                returnModules.append(file)
+    for file in allPyFiles:
+        if file !="__init__":
+            returnModules.append(file)
 
-        return returnModules
-
-    path = "D:/Users/Toby/Documents/GitHub/Python101/rigging"
+    return returnModules
 
 arm = trArmRig.ArmRig()
+
+def setRigModule(module,*args):
+    import rigging.module as module
+    instance =module.TITLE+"()"
+
+    return instance
+
+UIElements=jsonUtils.readJson(UIData)
+UIElements=json.loads(UIElements)
+
+
+def TSLSelection(TSL,*args):
+        selectedItem=mc.textScrollList(TSL,query=True,selectItem=True)
+        return selectedItem
+print(TSLSelection(UIElements["RigModuleLabel"]))

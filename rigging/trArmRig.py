@@ -5,7 +5,7 @@ import json
 import utils.rig_utils as rig_utils
 
 
-TITLE = "Arm Rig"
+TITLE = "ArmRig"
 class ArmRig:
     ''' Class that creates Arm Rig'''
 
@@ -105,6 +105,13 @@ class ArmRig:
         print(reverseNode)
         for i in range(len(ikJointNames)):
             mc.connectAttr("{reverseNode}.outputX".format(reverseNode=reverseNode), "{IK}.visibility".format(IK=self.armData["IKJointNames"][i]))
+
+
+    def layout(self,*args):
+        # Create joints from dictionary in default position
+
+        # Create layout joint controls
+
 
 arm =ArmRig()
 arm.install()

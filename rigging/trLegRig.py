@@ -4,7 +4,7 @@ import data.jsonUtils as jsonUtils
 import json
 import utils.rig_utils as rig_utils
 
-TITLE = "Leg Rig"
+TITLE = "LegRig"
 
 class LegRig:
 
